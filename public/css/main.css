@@ -14,7 +14,7 @@
 	color: white;
 	font-size: 40px !important;
 	margin-left: 10px;
-	margin-right: 20px;
+	margin-right: 10px;
 	margin-bottom: 15px;
 	
 }
@@ -78,7 +78,6 @@
   color: navy;
 }
 .author {
-  text-align: center;
   color: #DF830A;
 }
 .author:hover {
