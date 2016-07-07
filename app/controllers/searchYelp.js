@@ -36,6 +36,7 @@ $(document).ready(function () {
 });
 
 
+
 function successHandler (data) {
     var html = "";
     var i = 1;
@@ -47,26 +48,54 @@ function successHandler (data) {
             text: element.snippet_text,
             id: element.id
         };
-        if ($(".special").prop("checked")) {
-            item.categories.forEach(function (el) {
-                if (el[0] == $(".special-input").val()) {
-                    html += "<div id='option" + i + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
-                    html += "<button class='btn btn-default going-button' id='going" + i + "' value='" + item.id + "'>0 GOING</button><p class='pub-text'>" + item.text + "</p></div>";
-                    i++;
+        $.ajax({
+            type: "POST",
+            url: "https://pubparty-bartowski20.c9users.io/update",
+            data: {id: item.id},
+            error: errPulling,
+            success: function (dt) {
+                if (dt.length == 0) {
+                    if ($(".special").prop("checked")) {
+                        item.categories.forEach(function (el) {
+                            if (el[0] == $(".special-input").val()) {
+                                html += "<div id='option" + i + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
+                                html += "<button class='btn btn-default going-button' id='going" + i + "' value='" + item.id + "'>0 GOING</button><p class='pub-text'>" + item.text + "</p></div>";
+                                i++;
+                            }
+                        });
+                    }
+                    else {
+                        html += "<div id='option" + i + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
+                        html += "<button class='btn btn-default going-button' id='going" + i + "' value='" + item.id + "'>0 GOING</button><p class='pub-text'>" + item.text + "</p></div>";
+                        i++;
+                    }
                 }
-            });
-        }
-        else {
-            html += "<div id='option" + i + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
-            html += "<button class='btn btn-default going-button' id='going" + i + "' value='" + item.id + "'>0 GOING</button><p class='pub-text'>" + item.text + "</p></div>";
-            i++;
-        }
+                else {
+                    var numgoing = dt[0].numgoing;
+                    if ($(".special").prop("checked")) {
+                        item.categories.forEach(function (el) {
+                            if (el[0] == $(".special-input").val()) {
+                                html += "<div id='option" + i + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
+                                html += "<button class='btn btn-default going-button' id='going" + i + "' value='" + item.id + "'>" + numgoing + " GOING</button><p class='pub-text'>" + item.text + "</p></div>";
+                                i++;
+                            }
+                        });
+                    }
+                    else {
+                        html += "<div id='option" + i + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
+                        html += "<button class='btn btn-default going-button' id='going" + i + "' value='" + item.id + "'>" + numgoing + " GOING</button><p class='pub-text'>" + item.text + "</p></div>";
+                        i++;
+                    }
+                }
+                $("#pub-data").html(html);
+            }
+        });
     });
-   $("#pub-data").html(html);
 }
+
+
 
 function errorHandler (err) {
     alert("yelp api error");
 }
-
 

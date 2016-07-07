@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function (app) {
+module.exports = function (app, db) {
 	var n = require("nonce")();
 	var oauthSignature = require("oauth-signature");
 	var qs = require("querystring");
@@ -39,7 +39,22 @@ module.exports = function (app) {
 		
 	app.route("/going")
 		.post(function (req, res) {
-			console.log(req.body.id);
-			res.send("received");
+			var index = req.body.index;
+			var pub = req.body.id;
+			var choices = db.collection("choices");
+			choices.update({pub: pub}, {$inc: {numgoing: 1}}, {upsert: true});
+			res.send({index: index, pub: pub});
+		});
+		
+		
+	app.route("/update")
+		.post(function (req, res) {
+			var pub = req.body.id;
+			var choices = db.collection("choices");
+			choices.find({pub: pub}).toArray(function (err, docs) {
+				if (err) throw err;
+				console.log(JSON.stringify(docs));
+				res.send(docs);	
+			});
 		});
 };
