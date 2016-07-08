@@ -40,7 +40,8 @@ $(document).ready(function () {
 function successHandler (data) {
     var html = "";
     var i = 1;
-    data.businesses.forEach(function (element) {
+    var index;
+    data.body.businesses.forEach(function (element) {
         var item = {
             name: element.name,
             image: element.image_url,
@@ -48,10 +49,14 @@ function successHandler (data) {
             text: element.snippet_text,
             id: element.id
         };
+        if (item.id == data.pubID) {
+            index = i;
+        }
         $.ajax({
             type: "POST",
             url: "https://pubparty-bartowski20.c9users.io/update",
             data: {pubID: item.id},
+            async: false,
             error: errPulling,
             success: function (dt) {
                 if (dt.length === 0) {
@@ -87,10 +92,11 @@ function successHandler (data) {
                         i++;
                     }
                 }
-                $("#pub-data").html(html);
             }
         });
     });
+    $("#pub-data").html(html);
+    $("#pub-data").find("#going" + index).click(); 
 }
 
 

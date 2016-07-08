@@ -7,9 +7,16 @@ module.exports = function (app, db) {
 	var request = require("request");
 	var passport = require("passport");
 	
+	var restoreSearch = {city: "", title: ""};
+	
 	app.route("/")	
 		.get(function (req, res) {
-			res.sendFile(process.cwd() + "/public/index.html");	
+			var userID = "";
+			if (req.user) {
+				console.log(req.session);
+				userID = JSON.stringify(req.user.id);
+			}
+			res.render(process.cwd() + "/public/index.pug", {userID: userID});	
 		});
 		
 		
@@ -33,7 +40,8 @@ module.exports = function (app, db) {
 			data.oauth_signature = signature;
 			request(url + "?" + qs.stringify(data), function (error, response, body) {
 				console.log(req.body.city);
-				res.send(JSON.parse(body));
+				var obj = {body: JSON.parse(body), pubID: restoreSearch.title};
+				res.send(obj);
 			});
 		});
 		
@@ -86,19 +94,35 @@ module.exports = function (app, db) {
 	app.get('/auth/twitter', passport.authenticate('twitter'));
 	
 	app.get('/auth/twitter/callback',
-		passport.authenticate('twitter', { successRedirect: '/auth/success',
-                                     failureRedirect: '/login' }));
+		passport.authenticate('twitter', { successRedirect: '/',
+                                     failureRedirect: '/' }));
                                      
+    
+    app.route("/restore")
+    	.post(function (req, res) {
+    		restoreSearch.city = req.body.restoreCity;
+    		restoreSearch.title = req.body.pubTitle;
+    		console.log(JSON.stringify(restoreSearch));
+    		res.send("ok");
+    	})
+    	
+    	.get(function (req, res) {
+    		res.send(restoreSearch);	
+    	});
                                      
-    app.get("/auth/success", function (req, res) {
-    	console.log(req.session);
-    	res.render(process.cwd() + "/public/authSuccess.pug", {userID: JSON.stringify(req.user.id)});	
-    });
+    // app.get("/auth/success", function (req, res) {
+    // 	console.log(req.session);
+    // 	res.render(process.cwd() + "/public/authSuccess.pug", {userID: JSON.stringify(req.user.id)});	
+    // });
     
     
-    app.get("/bullshit", function (req, res) {
-    	var choices = db.collection("choices");
-    	choices.drop();
-    	res.send("done");
+    // app.get("/bullshit", function (req, res) {
+    // 	var choices = db.collection("choices");
+    // 	choices.drop();
+    // 	res.send("done");
+    // });
+    
+    app.get("/done", function (req, res) {
+    	res.send("<a href='/'>Home</a>");	
     });
 };

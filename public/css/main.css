@@ -87,6 +87,7 @@
 	color: white;
 	width: 82%;
 	margin-left: 9%;
+	z-index: 1;
 }
 .pub-element {
 	margin-top: 10px;
