@@ -33,7 +33,6 @@ mongo.connect("mongodb://localhost:27017/clementinejs", function (err, db) {
                     twitterid: profile.id
                 };
                 Users.insert({name: user.name, twitterid: user.id});
-                console.log(user);
                 return done(err, user);
                 }
             else {
@@ -45,14 +44,12 @@ mongo.connect("mongodb://localhost:27017/clementinejs", function (err, db) {
 	));
 	
 	passport.serializeUser(function(user, done) {  
-		console.log(JSON.stringify(user));
     	done(null, user.id);
 	});
 
 	passport.deserializeUser(function(id, done) {  
 		var Users = db.collection("users");
     	Users.findOne({ id: id }, function (err, user) {
-    		console.log(JSON.stringify(id));
         	done(err, user);
     	});
 	});

@@ -77,7 +77,8 @@ module.exports = function (app, db) {
 			var choices = db.collection("choices");
 			choices.find({pub: pub}).toArray(function (err, docs) {
 				if (err) throw err;
-				res.send(docs);	
+				res.send(docs);
+				console.log(JSON.stringify(docs));
 			});
 		});
 		

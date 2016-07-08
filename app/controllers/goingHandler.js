@@ -3,15 +3,17 @@
 $(document).ready(function () {
     $("#pub-data").on("click", function (event) {
       var index = event.target.id.substr(5, event.target.id.length);
-      var pubTitle = $('#option'+index + " .going-button").val();
-      var userID = $("#go").val();
-      $.ajax({
-          type: "POST",
-          url: "https://pubparty-bartowski20.c9users.io/going",
-          data: {pubTitle: pubTitle, index: index, userID: userID},
-          success: updateField,
-          error: errGoing
-      });
+      if (index[0] !== "n" && index !== "ata") {
+          var pubTitle = $('#option'+index + " .going-button").val();
+          var userID = $("#go").val();
+          $.ajax({
+              type: "POST",
+              url: "https://pubparty-bartowski20.c9users.io/going",
+              data: {pubTitle: pubTitle, index: index, userID: userID},
+              success: updateField,
+              error: errGoing
+          });
+      }
    });
 });
 
