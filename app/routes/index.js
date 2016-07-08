@@ -5,6 +5,7 @@ module.exports = function (app, db) {
 	var oauthSignature = require("oauth-signature");
 	var qs = require("querystring");
 	var request = require("request");
+	var passport = require("passport");
 	
 	app.route("/")	
 		.get(function (req, res) {
@@ -57,4 +58,17 @@ module.exports = function (app, db) {
 				res.send(docs);	
 			});
 		});
+		
+		
+	app.get('/auth/twitter', passport.authenticate('twitter'));
+	
+	app.get('/auth/twitter/callback',
+		passport.authenticate('twitter', { successRedirect: '/auth/success',
+                                     failureRedirect: '/login' }));
+                                     
+                                     
+    app.get("/auth/success", function (req, res) {
+    	console.log(req.session);
+    	res.render(process.cwd() + "/public/authSuccess.pug", {userID: JSON.stringify(req.user.id)});	
+    });
 };

@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    title PubParty!
+    link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/public/css/main.css', type='text/css')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css', type='text/css')
+    script(src='//code.jquery.com/jquery-1.11.2.min.js')
+    script(type='text/javascript', src='/controllers/searchYelp.js')
+    script(type='text/javascript', src='/controllers/goingHandler.js')
+  body.fluid-container.background
+    .header
+      h1.header-title Pub Party!
+      .row.icons
+        a(href='/auth/twitter')
+          i.fa.fa-cutlery(aria-hidden='true')
+        i.fa.fa-car(aria-hidden='true')
+        i.fa.fa-glass(aria-hidden='true')
+      .header-text
+        p See which local pubs are open tonight and RSVP ahead of time!
+    .row.search.form-inline
+      .form-group
+        input#input.search-input.form-control(type='text', placeholder='Enter your current location...')
+      |  
+      button#go.btn.btn-default.search-go(value=userID) GO
+    .checkbox
+      label
+        input.special(type='checkbox', value='')
+        | Special Search
+    .special-options
+    #pub-data
+    .footer
+      | by 
+      a.author(href='http://codepen.io/nbailey20/full/BzBYRW/', target='_blank') nickbailey

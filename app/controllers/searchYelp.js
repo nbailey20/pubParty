@@ -3,6 +3,8 @@
 $(document).ready(function () {
    $("#go").on("click", function (event) {
       var city = $("#input").val();
+      var userID = $("#go").val();
+      alert(userID);
       var url = "https://pubparty-bartowski20.c9users.io/search";
       var term = "pub";
       if ($(".special").prop("checked")) {
