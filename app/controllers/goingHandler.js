@@ -3,11 +3,12 @@
 $(document).ready(function () {
     $("#pub-data").on("click", function (event) {
       var index = event.target.id.substr(5, event.target.id.length);
-      var identifier = $('#option'+index + " .going-button").val();
+      var pubTitle = $('#option'+index + " .going-button").val();
+      var userID = $("#go").val();
       $.ajax({
           type: "POST",
           url: "https://pubparty-bartowski20.c9users.io/going",
-          data: {id: identifier, index: index},
+          data: {pubTitle: pubTitle, index: index, userID: userID},
           success: updateField,
           error: errGoing
       });
@@ -17,12 +18,12 @@ $(document).ready(function () {
 
 function updateField (data) {
     var url = "https://pubparty-bartowski20.c9users.io/update";
-    var id = data.pub;
+    var pubID = data.pub;
     var index = data.index;
     $.ajax({
         type: "POST",
         url: url,
-        data: {id: id},
+        data: {pubID: pubID},
         error: errPulling,
         success: function (dt) {
             var numgoing = dt[0].numgoing;

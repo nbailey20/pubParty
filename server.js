@@ -37,7 +37,7 @@ mongo.connect("mongodb://localhost:27017/clementinejs", function (err, db) {
                 return done(err, user);
                 }
             else {
-            	console.log("here " + JSON.stringify(user));
+            	console.log(JSON.stringify(user));
                 return done(err, user);
             }
         });

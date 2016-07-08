@@ -41,20 +41,42 @@ module.exports = function (app, db) {
 	app.route("/going")
 		.post(function (req, res) {
 			var index = req.body.index;
-			var pub = req.body.id;
+			var pub = req.body.pubTitle;
+			var userID = req.body.userID;
 			var choices = db.collection("choices");
-			choices.update({pub: pub}, {$inc: {numgoing: 1}}, {upsert: true});
+			choices.find({pub: pub}).toArray(function (err, docs) {
+				if (err) throw err;
+				if (docs.length > 0) {
+					if (docs[0].attending.length > 0) {
+						if (docs[0].attending.indexOf(userID) >= 0) {
+							choices.update({pub: pub}, {$inc: {numgoing: -1}});
+							choices.update({pub: pub}, {$pull: {attending: userID}});
+						}
+						else {
+							choices.update({pub: pub}, {$inc: {numgoing: 1}});
+							choices.update({pub: pub}, {$push: {attending: userID}});
+						}
+					}
+					else {
+						choices.update({pub: pub}, {$inc: {numgoing: 1}});
+						choices.update({pub: pub}, {$push: {attending: userID}});
+					}
+				}
+				else {
+					var attending = [userID];
+					choices.insert({pub: pub, numgoing: 1, attending: attending});
+				}
+			});
 			res.send({index: index, pub: pub});
 		});
 		
 		
 	app.route("/update")
 		.post(function (req, res) {
-			var pub = req.body.id;
+			var pub = req.body.pubID;
 			var choices = db.collection("choices");
 			choices.find({pub: pub}).toArray(function (err, docs) {
 				if (err) throw err;
-				console.log(JSON.stringify(docs));
 				res.send(docs);	
 			});
 		});
@@ -70,5 +92,12 @@ module.exports = function (app, db) {
     app.get("/auth/success", function (req, res) {
     	console.log(req.session);
     	res.render(process.cwd() + "/public/authSuccess.pug", {userID: JSON.stringify(req.user.id)});	
+    });
+    
+    
+    app.get("/bullshit", function (req, res) {
+    	var choices = db.collection("choices");
+    	choices.drop();
+    	res.send("done");
     });
 };

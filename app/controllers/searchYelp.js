@@ -3,8 +3,6 @@
 $(document).ready(function () {
    $("#go").on("click", function (event) {
       var city = $("#input").val();
-      var userID = $("#go").val();
-      alert(userID);
       var url = "https://pubparty-bartowski20.c9users.io/search";
       var term = "pub";
       if ($(".special").prop("checked")) {
@@ -53,10 +51,10 @@ function successHandler (data) {
         $.ajax({
             type: "POST",
             url: "https://pubparty-bartowski20.c9users.io/update",
-            data: {id: item.id},
+            data: {pubID: item.id},
             error: errPulling,
             success: function (dt) {
-                if (dt.length == 0) {
+                if (dt.length === 0) {
                     if ($(".special").prop("checked")) {
                         item.categories.forEach(function (el) {
                             if (el[0] == $(".special-input").val()) {
