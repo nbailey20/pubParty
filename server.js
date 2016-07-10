@@ -25,14 +25,14 @@ mongo.connect("mongodb://localhost:27017/clementinejs", function (err, db) {
 	  },
 	  function(token, tokenSecret, profile, done) {
 	  	var Users = db.collection("users");
-	    Users.findOne({ id: profile.id }, function (err, user) {
+	    Users.findOne({ twitterid: profile.id }, function (err, user) {
             if (err) { return done(err); }
             if (!user) {
                 user = {
                     name: profile.displayName,
                     twitterid: profile.id
                 };
-                Users.insert({name: user.name, twitterid: user.id});
+                Users.insert({name: user.name, twitterid: user.twitterid});
                 return done(err, user);
                 }
             else {
@@ -44,12 +44,13 @@ mongo.connect("mongodb://localhost:27017/clementinejs", function (err, db) {
 	));
 	
 	passport.serializeUser(function(user, done) {  
-    	done(null, user.id);
+		console.log(JSON.stringify(user));
+    	done(null, user.twitterid);
 	});
 
 	passport.deserializeUser(function(id, done) {  
 		var Users = db.collection("users");
-    	Users.findOne({ id: id }, function (err, user) {
+    	Users.findOne({ twitterid: id }, function (err, user) {
         	done(err, user);
     	});
 	});

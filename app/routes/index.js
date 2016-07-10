@@ -14,7 +14,7 @@ module.exports = function (app, db) {
 			var userID = "";
 			if (req.user) {
 				console.log(req.session);
-				userID = JSON.stringify(req.user.id);
+				userID = JSON.stringify(req.user.twitterid);
 			}
 			res.render(process.cwd() + "/public/index.pug", {userID: userID});	
 		});
@@ -39,8 +39,10 @@ module.exports = function (app, db) {
 			var signature = oauthSignature.generate("GET", url, data, consumerSecret, tokenSecret, { encodeSignature: false});
 			data.oauth_signature = signature;
 			request(url + "?" + qs.stringify(data), function (error, response, body) {
-				console.log(req.body.city);
+				if (error) throw error;
+				console.log("City " + req.body.city);
 				var obj = {body: JSON.parse(body), pubID: restoreSearch.title};
+				console.log(obj);
 				res.send(obj);
 			});
 		});
@@ -82,11 +84,13 @@ module.exports = function (app, db) {
 	app.route("/update")
 		.post(function (req, res) {
 			var pub = req.body.pubID;
+			var ind = req.body.ind;
 			var choices = db.collection("choices");
 			choices.find({pub: pub}).toArray(function (err, docs) {
 				if (err) throw err;
-				res.send(docs);
-				console.log(JSON.stringify(docs));
+				var obj = {docs: docs, ind: ind};
+				console.log(docs);
+				res.send(obj);
 			});
 		});
 		
@@ -95,7 +99,7 @@ module.exports = function (app, db) {
 	
 	app.get('/auth/twitter/callback',
 		passport.authenticate('twitter', { successRedirect: '/',
-                                     failureRedirect: '/' }));
+                                     failureRedirect: '/done' }));
                                      
     
     app.route("/restore")

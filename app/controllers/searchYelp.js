@@ -3,7 +3,7 @@
 $(document).ready(function () {
    $("#go").on("click", function (event) {
       var city = $("#input").val();
-      var url = "https://pubparty-bartowski20.c9users.io/search";
+      var url = "//pubparty-bartowski20.c9users.io/search";
       var term = "pub";
       if ($(".special").prop("checked")) {
           term = $(".special-input").val() + " " + term;
@@ -38,65 +38,76 @@ $(document).ready(function () {
 
 
 function successHandler (data) {
-    var html = "";
-    var i = 1;
+    var html = [];
+    for (var j = 0; j < data.body.businesses.length; j++) {
+        html.push("");
+    }
     var index;
-    data.body.businesses.forEach(function (element) {
+    var i = 0;
+    html.forEach(function (element) {
+       
         var item = {
-            name: element.name,
-            image: element.image_url,
-            categories: element.categories,
-            text: element.snippet_text,
-            id: element.id
+            name: data.body.businesses[i].name,
+            image: data.body.businesses[i].image_url,
+            categories: data.body.businesses[i].categories,
+            text: data.body.businesses[i].snippet_text,
+            id: data.body.businesses[i].id
         };
-        if (item.id == data.pubID) {
+        i++;
+        
+        if (item.id == data.pubID && window.performance.navigation.type === 0) {
             index = i;
         }
         $.ajax({
             type: "POST",
-            url: "https://pubparty-bartowski20.c9users.io/update",
-            data: {pubID: item.id},
-            async: false,
+            url: "//pubparty-bartowski20.c9users.io/update",
+            data: {pubID: item.id, ind: i},
             error: errPulling,
             success: function (dt) {
-                if (dt.length === 0) {
+                 
+                if (dt.docs.length === 0) {
                     if ($(".special").prop("checked")) {
                         item.categories.forEach(function (el) {
                             if (el[0] == $(".special-input").val()) {
-                                html += "<div id='option" + i + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
-                                html += "<button class='btn btn-default going-button' id='going" + i + "' value='" + item.id + "'>0 GOING</button><p class='pub-text'>" + item.text + "</p></div>";
-                                i++;
+                                var text = "<div id='option" + dt.ind + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
+                                text += "<button class='btn btn-default going-button' id='going" + dt.ind + "' value='" + item.id + "'>0 GOING</button><p class='pub-text'>" + item.text + "</p></div>";
+                                html[dt.ind-1] = text;
                             }
                         });
                     }
                     else {
-                        html += "<div id='option" + i + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
-                        html += "<button class='btn btn-default going-button' id='going" + i + "' value='" + item.id + "'>0 GOING</button><p class='pub-text'>" + item.text + "</p></div>";
-                        i++;
+                        var text = "<div id='option" + dt.ind + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
+                        text += "<button class='btn btn-default going-button' id='going" + dt.ind + "' value='" + item.id + "'>0 GOING</button><p class='pub-text'>" + item.text + "</p></div>";
+                        html[dt.ind-1] = text;
                     }
                 }
                 else {
-                    var numgoing = dt[0].numgoing;
+                    var numgoing = dt.docs[0].numgoing;
                     if ($(".special").prop("checked")) {
                         item.categories.forEach(function (el) {
                             if (el[0] == $(".special-input").val()) {
-                                html += "<div id='option" + i + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
-                                html += "<button class='btn btn-default going-button' id='going" + i + "' value='" + item.id + "'>" + numgoing + " GOING</button><p class='pub-text'>" + item.text + "</p></div>";
-                                i++;
+                                var text = "<div id='option" + dt.ind + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
+                                text += "<button class='btn btn-default going-button' id='going" + dt.ind + "' value='" + item.id + "'>" + numgoing + " GOING</button><p class='pub-text'>" + item.text + "</p></div>";
+                                html[dt.ind-1] = text;
                             }
                         });
                     }
                     else {
-                        html += "<div id='option" + i + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
-                        html += "<button class='btn btn-default going-button' id='going" + i + "' value='" + item.id + "'>" + numgoing + " GOING</button><p class='pub-text'>" + item.text + "</p></div>";
-                        i++;
+                        var text = "<div id='option" + dt.ind + "' class='pub-element'><p class='pub-name'>" + item.name + "</p><img class='pub-image' src='" + item.image +"'</img>";
+                        text += "<button class='btn btn-default going-button' id='going" + dt.ind + "' value='" + item.id + "'>" + numgoing + " GOING</button><p class='pub-text'>" + item.text + "</p></div>";
+                        html[dt.ind-1] = text;
                     }
                 }
+                $("#pub-data").html(html.join(""));
             }
         });
     });
-    $("#pub-data").html(html);
-    $("#pub-data").find("#going" + index).click(); 
+    setTimeout(function () {$("#pub-data").find("#going" + index).click()}, 1500);
+     $.ajax({
+        type: "POST",
+        url: "//pubparty-bartowski20.c9users.io/restore",
+        data: {restoreCity: "", pubTitle: ""}
+    });
 }
 
 
