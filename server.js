@@ -7,6 +7,7 @@ var bodyParser = require("body-parser");
 var mongo = require("mongodb").MongoClient;
 var passport = require("passport");
 var TwitterStrategy = require("passport-twitter").Strategy;
+require("node-env-file")(".env");
 var app = express();
 
 mongo.connect("mongodb://localhost:27017/clementinejs", function (err, db) {
@@ -19,9 +20,9 @@ mongo.connect("mongodb://localhost:27017/clementinejs", function (err, db) {
 	app.use(passport.session());
 	
 	passport.use('twitter', new TwitterStrategy({
-	    consumerKey: "E8pmOhv8tos5F2KKzRMj83xiG",
-		consumerSecret: "PeKXR6fxDuVmLXANTU3e9d0uTzuKpuK0D3rR2NlsvoU8JBH2RM",						//figure out how to export eventually
-	    callbackURL: "https://pubparty-bartowski20.c9users.io/auth/twitter/callback"
+	    consumerKey: process.env.TWITTER_CONSUMER_KEY,
+		consumerSecret: process.env.TWITTER_CONSUMER_SECRET,					
+	    callbackURL: process.env.APP_URL + "auth/twitter/callback"
 	  },
 	  function(token, tokenSecret, profile, done) {
 	  	var Users = db.collection("users");

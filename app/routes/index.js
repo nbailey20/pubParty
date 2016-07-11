@@ -6,6 +6,7 @@ module.exports = function (app, db) {
 	var qs = require("querystring");
 	var request = require("request");
 	var passport = require("passport");
+	require("node-env-file")(".env");
 	
 	var restoreSearch = {city: "", title: "", special: ""};
 	
@@ -23,13 +24,13 @@ module.exports = function (app, db) {
 	app.route("/search")
 		.post(function (req, res) {
 			var url = 'http://api.yelp.com/v2/search';
-			var consumerSecret = "ApdePzlz-K65Iq5Fa4Fw-srSDaM";
-			var tokenSecret = "s-wJW1XH04aeY44qJr3DpiwP77g";
+			var consumerSecret = process.env.YELP_CONSUMER_SECRET;
+			var tokenSecret = process.env.YELP_TOKEN_SECRET;
 			var data = {
 				location: req.body.city,
 				term: req.body.term,
-				oauth_consumer_key: "0Pt0EUmSdQgeoWGtGOi4Og",
-				oauth_token: "MEFo-1NGZdZQO5aWld6cdMen_xXIkq35",
+				oauth_consumer_key: process.env.YELP_CONSUMER_KEY,
+				oauth_token: process.env.YELP_TOKEN,
 				oauth_nonce: n(),
 				oauth_timestamp: n().toString().substr(0,10),
 				oauth_signature_method : 'HMAC-SHA1',
@@ -40,9 +41,8 @@ module.exports = function (app, db) {
 			data.oauth_signature = signature;
 			request(url + "?" + qs.stringify(data), function (error, response, body) {
 				if (error) throw error;
-				console.log("City " + req.body.city);
+				console.log("City: " + req.body.city);
 				var obj = {body: JSON.parse(body), pubID: restoreSearch.title};
-				console.log(JSON.stringify(obj));
 				res.send(obj);
 			});
 		});
@@ -99,9 +99,8 @@ module.exports = function (app, db) {
 	
 	app.get('/auth/twitter/callback',
 		passport.authenticate('twitter', { successRedirect: '/',
-                                     failureRedirect: '/done' }));
+                                     failureRedirect: '/' }));
                                      
-    
     app.route("/restore")
     	.post(function (req, res) {
     		restoreSearch.city = req.body.restoreCity;
@@ -114,20 +113,4 @@ module.exports = function (app, db) {
     	.get(function (req, res) {
     		res.send(restoreSearch);	
     	});
-                                     
-    // app.get("/auth/success", function (req, res) {
-    // 	console.log(req.session);
-    // 	res.render(process.cwd() + "/public/authSuccess.pug", {userID: JSON.stringify(req.user.id)});	
-    // });
-    
-    
-    // app.get("/bullshit", function (req, res) {
-    // 	var choices = db.collection("choices");
-    // 	choices.drop();
-    // 	res.send("done");
-    // });
-    
-    app.get("/done", function (req, res) {
-    	res.send("<a href='/'>Home</a>");	
-    });
 };

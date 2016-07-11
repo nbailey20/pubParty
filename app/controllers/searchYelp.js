@@ -108,7 +108,6 @@ function successHandler (data) {
                             html[dt.ind-1] = text;
                         }
                     }
-                    //alert(html[0]);
                     $("#pub-data").html(html.join(""));
                 }
             });
