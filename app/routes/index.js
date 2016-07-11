@@ -34,6 +34,7 @@ module.exports = function (app, db) {
 				data.category_filter = req.body.category;
 			}
 			
+			data.radius_filter = 40000;
 			data.oauth_consumer_key = process.env.YELP_CONSUMER_KEY;
 			data.oauth_token = process.env.YELP_TOKEN;
 			data.oauth_nonce = n();
@@ -46,7 +47,7 @@ module.exports = function (app, db) {
 			request(url + "?" + qs.stringify(data), function (error, response, body) {
 				if (error) throw error;
 				console.log("City: " + data.location + " Special: " + data.category_filter);
-				var obj = {body: JSON.parse(body), pubID: restoreSearch.title};;
+				var obj = {body: JSON.parse(body), pubID: restoreSearch.title};
 				res.send(obj);
 			});
 		});

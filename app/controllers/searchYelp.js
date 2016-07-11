@@ -10,6 +10,9 @@ $(document).ready(function () {
           if (category === "gluten-free") {
               category = "gluten_free";
           }
+          if (category === "indian") {
+              category = "indpak";
+          }
           $.ajax({
               type: "POST",
               url: url,
@@ -35,9 +38,9 @@ $(document).ready(function () {
           searchbox += "<button class='special-button btn btn-default dropdown-toggle' id='choice' data-toggle='dropdown'>Choose an option...";
           searchbox += "<span class='caret'></span></button><ul id='choices' class='dropdown-menu special-options'>";
           searchbox += "<li id='option1'>African</li><li id='option2'>Argentine</li>";
-          searchbox += "<li id='option3'>Australian</li><li id='option4'>Barbeque</li>";
-          searchbox += "<li id='option5'>Bistros</li><li id='option6'>Brazilian</li>";
-          searchbox += "<li id='option7'>Buffets</li><li id='option8'>Cafes</li>";
+          searchbox += "<li id='option3'>Australian</li><li id='option4'>BBQ</li>";
+          searchbox += "<li id='option5'>Brazilian</li><li id='option6'>Buffets</li>";
+          searchbox += "<li id='option7'>Burgers</li><li id='option8'>Cafes</li>";
           searchbox += "<li id='option9'>Cajun</li><li id='option10'>Chinese</li>";
           searchbox += "<li id='option11'>Delis</li><li id='option12'>French</li>";
           searchbox += "<li id='option13'>German</li><li id='option14'>Gluten-Free</li>";
