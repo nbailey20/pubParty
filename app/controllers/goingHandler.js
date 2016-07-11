@@ -2,31 +2,37 @@
 
 
 $(document).ready(function () {
-    alert(document.referrer);
-    alert(window.parent.location);
-    if (document.referrer.substr(0, 23) == "https://api.twitter.com" && window.performance.navigation.type === 0) {
        $.ajax({
            type: "GET",
            url: "//pubparty-bartowski20.c9users.io/restore",
            success: function (data) {
-               $("#input").val(data.city);
-               $("#go").click();
+                if (data.city !== "") {
+                   $("#input").val(data.city);
+                   if (data.special !== "") {
+                       $(".special").click();
+                       $(".special-input").val(data.special);
+                   }
+                   $("#go").click();
+                }
            }
        });
-    }
     
     $("#pub-data").on("click", function (event) {
       var index = event.target.id.substr(5, event.target.id.length);
-      if (index[0] !== "n" && index !== "ata") {
+      if (index[0] !== "n" && index !== "ata" && event.target.id.substr(0, 4) !== "name") {
           var pubTitle = $('#option'+index + " .going-button").val();
           var userID = $("#go").val();
           if (userID === "") {
               
               var restoreCity = $("#input").val();
+              var restoreSpecial = "";
+              if ($(".special").prop("checked")) {
+                  restoreSpecial = $(".special-input").val();
+              }
               $.ajax({
                   type: "POST",
                   url: "//pubparty-bartowski20.c9users.io/restore",
-                  data: {restoreCity: restoreCity, pubTitle: pubTitle},
+                  data: {restoreCity: restoreCity, pubTitle: pubTitle, restoreSpecial: restoreSpecial},
                   success: function (data) {
                       window.location.href = "/auth/twitter";
                   }

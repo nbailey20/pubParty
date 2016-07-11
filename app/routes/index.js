@@ -7,7 +7,7 @@ module.exports = function (app, db) {
 	var request = require("request");
 	var passport = require("passport");
 	
-	var restoreSearch = {city: "", title: ""};
+	var restoreSearch = {city: "", title: "", special: ""};
 	
 	app.route("/")	
 		.get(function (req, res) {
@@ -42,7 +42,7 @@ module.exports = function (app, db) {
 				if (error) throw error;
 				console.log("City " + req.body.city);
 				var obj = {body: JSON.parse(body), pubID: restoreSearch.title};
-				console.log(obj);
+				console.log(JSON.stringify(obj));
 				res.send(obj);
 			});
 		});
@@ -106,6 +106,7 @@ module.exports = function (app, db) {
     	.post(function (req, res) {
     		restoreSearch.city = req.body.restoreCity;
     		restoreSearch.title = req.body.pubTitle;
+    		restoreSearch.special = req.body.restoreSpecial;
     		console.log(JSON.stringify(restoreSearch));
     		res.send("ok");
     	})

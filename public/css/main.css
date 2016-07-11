@@ -8,7 +8,8 @@
 }
 .header-title {
 	color: white;
-	font-size: 50px;
+	font-size: 60px;
+	font-family: "Indie Flower";
 }
 .fa {
 	color: white;
@@ -22,6 +23,7 @@
 	color: white;
 	font-size: 20px;
 	margin-bottom: 50px;
+	font-family: "Montserrat";
 }
 
 /*Search styling*/
@@ -103,6 +105,8 @@
 	margin-left: 120px;
 	margin-top: 25px;
 	position: absolute;
+	color: white;
+	font-size: 18px;
 }
 .pub-image {
 	margin-top: 8px;
