@@ -57,10 +57,16 @@
 .special-text {
 	text-align: center;
 	color: lightgray;
+	width: 110%;
 }
 .special-options {
 	width: 30%;
 	margin-left: 35%;
+	text-align: center;
+}
+.nopub {
+	text-align: center;
+	font-size: 25px;
 }
 
 

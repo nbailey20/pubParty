@@ -10,7 +10,7 @@ $(document).ready(function () {
                    $("#input").val(data.city);
                    if (data.special !== "") {
                        $(".special").click();
-                       $(".special-input").val(data.special);
+                       $("#choice").html(data.special);
                    }
                    $("#go").click();
                 }
@@ -27,7 +27,7 @@ $(document).ready(function () {
               var restoreCity = $("#input").val();
               var restoreSpecial = "";
               if ($(".special").prop("checked")) {
-                  restoreSpecial = $(".special-input").val();
+                  restoreSpecial = $("#choice").html();
               }
               $.ajax({
                   type: "POST",

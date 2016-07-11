@@ -29,20 +29,24 @@ module.exports = function (app, db) {
 			var data = {
 				location: req.body.city,
 				term: req.body.term,
-				oauth_consumer_key: process.env.YELP_CONSUMER_KEY,
-				oauth_token: process.env.YELP_TOKEN,
-				oauth_nonce: n(),
-				oauth_timestamp: n().toString().substr(0,10),
-				oauth_signature_method : 'HMAC-SHA1',
-				oauth_version : '1.0'
 			};
+			if (req.body.category) {
+				data.category_filter = req.body.category;
+			}
+			
+			data.oauth_consumer_key = process.env.YELP_CONSUMER_KEY;
+			data.oauth_token = process.env.YELP_TOKEN;
+			data.oauth_nonce = n();
+			data.oauth_timestamp = n().toString().substr(0,10);
+			data.oauth_signature_method = 'HMAC-SHA1';
+			data.oauth_version = '1.0';
 			
 			var signature = oauthSignature.generate("GET", url, data, consumerSecret, tokenSecret, { encodeSignature: false});
 			data.oauth_signature = signature;
 			request(url + "?" + qs.stringify(data), function (error, response, body) {
 				if (error) throw error;
-				console.log("City: " + req.body.city);
-				var obj = {body: JSON.parse(body), pubID: restoreSearch.title};
+				console.log("City: " + data.location + " Special: " + data.category_filter);
+				var obj = {body: JSON.parse(body), pubID: restoreSearch.title};;
 				res.send(obj);
 			});
 		});
@@ -89,7 +93,6 @@ module.exports = function (app, db) {
 			choices.find({pub: pub}).toArray(function (err, docs) {
 				if (err) throw err;
 				var obj = {docs: docs, ind: ind};
-				console.log(docs);
 				res.send(obj);
 			});
 		});
@@ -106,7 +109,6 @@ module.exports = function (app, db) {
     		restoreSearch.city = req.body.restoreCity;
     		restoreSearch.title = req.body.pubTitle;
     		restoreSearch.special = req.body.restoreSpecial;
-    		console.log(JSON.stringify(restoreSearch));
     		res.send("ok");
     	})
     	
