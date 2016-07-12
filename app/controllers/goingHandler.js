@@ -4,7 +4,7 @@
 $(document).ready(function () {
        $.ajax({
            type: "GET",
-           url: "//pubparty-bartowski20.c9users.io/restore",
+           url: "/restore",
            success: function (data) {
                 if (data.city !== "") {
                    $("#input").val(data.city);
@@ -31,7 +31,7 @@ $(document).ready(function () {
               }
               $.ajax({
                   type: "POST",
-                  url: "//pubparty-bartowski20.c9users.io/restore",
+                  url: "/restore",
                   data: {restoreCity: restoreCity, pubTitle: pubTitle, restoreSpecial: restoreSpecial},
                   success: function (data) {
                       window.location.href = "/auth/twitter";
@@ -41,7 +41,7 @@ $(document).ready(function () {
           else {
                $.ajax({
                   type: "POST",
-                  url: "//pubparty-bartowski20.c9users.io/going",
+                  url: "/going",
                   data: {pubTitle: pubTitle, index: index, userID: userID},
                   success: updateField,
                   error: errGoing
@@ -53,7 +53,7 @@ $(document).ready(function () {
 
 
 function updateField (data) {
-    var url = "//pubparty-bartowski20.c9users.io/update";
+    var url = "/update";
     var pubID = data.pub;
     var index = data.index;
     $.ajax({

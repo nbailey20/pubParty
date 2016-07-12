@@ -3,7 +3,7 @@
 $(document).ready(function () {
    $("#go").on("click", function (event) {
       var city = $("#input").val();
-      var url = "//pubparty-bartowski20.c9users.io/search";
+      var url = "/search";
       var term = "pubs";
       if ($(".special").prop("checked")) {
           var category = $("#choice").html().toLowerCase();
@@ -109,7 +109,7 @@ function successHandler (data) {
             
             $.ajax({
                 type: "POST",
-                url: "//pubparty-bartowski20.c9users.io/update",
+                url: "/update",
                 data: {pubID: item.id, ind: i},
                 error: errPulling,
                 success: function (dt) {
@@ -133,7 +133,7 @@ function successHandler (data) {
     setTimeout(function () {$("#pub-data").find("#going" + index).click()}, 1500);
      $.ajax({
         type: "POST",
-        url: "//pubparty-bartowski20.c9users.io/restore",
+        url: "/restore",
         data: {restoreCity: "", pubTitle: "", restoreSpecial: ""}
     });
 }

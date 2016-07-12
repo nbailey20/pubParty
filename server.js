@@ -59,6 +59,6 @@ mongo.connect(process.env.MONGO_URI, function (err, db) {
 	routes(app, db);
 	
 	app.listen(process.env.PORT, function () {
-		console.log("App listening on port 8080...");	
+		console.log("App listening...");	
 	});
 });
