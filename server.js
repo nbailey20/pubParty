@@ -10,7 +10,7 @@ var TwitterStrategy = require("passport-twitter").Strategy;
 require("node-env-file")(".env");
 var app = express();
 
-mongo.connect("mongodb://localhost:27017/clementinejs", function (err, db) {
+mongo.connect(process.env.MONGO_URI, function (err, db) {
 	if (err) throw err;
 	app.use("/public", express.static(process.cwd() + "/public"));
 	app.use("/controllers", express.static(process.cwd() + "/app/controllers"));
@@ -58,7 +58,7 @@ mongo.connect("mongodb://localhost:27017/clementinejs", function (err, db) {
 
 	routes(app, db);
 	
-	app.listen(8080, function () {
+	app.listen(process.env.PORT, function () {
 		console.log("App listening on port 8080...");	
 	});
 });
